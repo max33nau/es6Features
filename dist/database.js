@@ -19,9 +19,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function database() {
   var db = undefined;
+  var PlayerStatsSchema = undefined;
   var dbData = {
     start: function start(callback) {
-      _mongoose2.default.connect(my.dbConnect + my.dbHost);
+      _mongoose2.default.connect('' + my.dbConnect + my.dbName);
       db = _mongoose2.default.connection;
       db.on('error', function (error) {
         console.log(error);
@@ -31,7 +32,38 @@ function database() {
     },
 
     mongoose: _mongoose2.default,
-    db: db
+    db: db,
+    createSchema: function createSchema() {
+      var Schema = _mongoose2.default.Schema;
+      PlayerStatsSchema = new Schema({
+        name: { type: String, unique: true, required: true },
+        team: { type: String, required: true },
+        age: { type: Number, required: true },
+        height: {
+          feet: Number,
+          inches: Number
+        },
+        position: { type: String, required: true },
+        rookie: Boolean,
+        numberOfGamesPlayed: Number,
+        totals: {
+          points: Number,
+          rebounds: Number,
+          assists: Number,
+          steals: Number,
+          blocks: Number
+        },
+        average: {
+          pointsPerGame: Number,
+          reboundsPerGame: Number,
+          assistsPerGame: Number,
+          stealsPerGame: Number,
+          blocksPerGame: Number
+        }
+      });
+      var player = _mongoose2.default.model('Player', PlayerStatsSchema);
+      return player;
+    }
   };
   return dbData;
 }
