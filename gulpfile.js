@@ -1,12 +1,12 @@
 "use strict";
-var gulp = require('gulp');
-var babel = require('gulp-babel');
-var mocha = require('gulp-mocha');
-var core = require('babel-core/register');
-var jshint = require('gulp-jshint');
-var stylish = require('jshint-stylish');
+require('babel-core/register');
+const gulp = require('gulp');
+const babel = require('gulp-babel');
+const mocha = require('gulp-mocha');
+const jshint = require('gulp-jshint');
+const stylish = require('jshint-stylish');
 
-gulp.task('run-tests', function(){
+gulp.task('run-tests', () => {
   return gulp.src('./test/testES6Features.js', {read: false})
     .pipe(mocha({
       reporter: 'nyan',
@@ -16,21 +16,22 @@ gulp.task('run-tests', function(){
     }));
 });
 
-gulp.task('watch-test', function() {
+gulp.task('watch-test', () => {
   gulp.watch(['./lib/*.js', './test/testES6Features.js'], ['run-tests', 'lint']);
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', () => {
   return gulp.src(['./lib/*.js','./test/testES6Features.js'])
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter(stylish));
 });
 
-gulp.task('build', function(){
-  return gulp.src('./lib/*.js')
-    .pipe(babel())
-    .pipe(gulp.dest('./rebuilt'));
+gulp.task('build', () => {
+	return gulp.src('lib/**/*.js')
+		.pipe(babel({
+			presets: ['es2015']
+		}))
+		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['run-tests']);
 gulp.task('test', ['run-tests', 'watch-test', 'lint']);
