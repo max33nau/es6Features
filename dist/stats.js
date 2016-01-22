@@ -25,6 +25,21 @@ function stats() {
   router.use(_bodyParser2.default.json());
   router.use(_bodyParser2.default.urlencoded({ extended: false }));
 
+  router.get('/', function (request, response) {
+    Player.find({}).sort({ name: 'asc' }).then(function (players, error) {
+      if (players) response.send(players);else return error;
+    }).then(function () {
+      var error = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+
+      if (error) {
+        console.log(error);
+        response.send(error);
+      }
+    }).then(function () {
+      response.end();
+    });
+  });
+
   router.post('/', function (request, response) {
     var newPlayer = new Player();
     var gamesPlayed = Number(request.body.numberOfGamesPlayed);
@@ -32,15 +47,15 @@ function stats() {
     newPlayer.team = request.body.team;
     newPlayer.age = request.body.age;
     newPlayer.height.feet = request.body.feet;
-    newPlayer.height.inches = Number(request.body.inches);
+    newPlayer.height.inches = request.body.inches;
     newPlayer.position = request.body.position;
     newPlayer.rookie = request.body.rookie;
     newPlayer.numberOfGamesPlayed = gamesPlayed;
-    newPlayer.totals.points = Number(request.body.totalPoints);
-    newPlayer.totals.rebounds = Number(request.body.totalRebounds);
-    newPlayer.totals.assists = Number(request.body.totalAssists);
-    newPlayer.totals.steals = Number(request.body.totalSteals);
-    newPlayer.totals.blocks = Number(request.body.totalBlocks);
+    newPlayer.totals.points = request.body.totalPoints;
+    newPlayer.totals.rebounds = request.body.totalRebounds;
+    newPlayer.totals.assists = request.body.totalAssists;
+    newPlayer.totals.steals = request.body.totalSteals;
+    newPlayer.totals.blocks = request.body.totalBlocks;
     newPlayer.average.pointsPerGame = Number((newPlayer.totals.points / gamesPlayed).toFixed(1));
     newPlayer.average.reboundsPerGame = Number((newPlayer.totals.rebounds / gamesPlayed).toFixed(1));
     newPlayer.average.assistsPerGame = Number((newPlayer.totals.assists / gamesPlayed).toFixed(1));

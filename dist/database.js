@@ -20,7 +20,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function database() {
   function toUpper(value) {
     return value.toUpperCase();
-  }
+  };
   function validator(value) {
     return !isNaN(value);
   };
