@@ -31,6 +31,8 @@ function stats() {
   router.use(_bodyParser2.default.json());
   router.use(_bodyParser2.default.urlencoded({ extended: false }));
   router.get('/', playerHandler.getAll);
+  router.get('/:id', playerHandler.getPlayerById);
   router.post('/', playerHandler.createPlayer);
+  router.put('/:id', playerHandler.updatePlayerStats);
   return router;
 }

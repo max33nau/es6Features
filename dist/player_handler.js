@@ -4,7 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getAll = getAll;
+exports.getPlayerById = getPlayerById;
 exports.createPlayer = createPlayer;
+exports.updatePlayerStats = updatePlayerStats;
 
 var _database = require('./database');
 
@@ -12,16 +14,25 @@ var dbData = (0, _database.database)();
 var Player = dbData.createSchema();
 
 function getAll(request, response) {
-  Player.find({}).sort({ name: 'asc' }).then(function (players, error) {
-    if (players) response.send(players);else return error;
-  }).then(function () {
-    var error = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
-
-    if (error) {
-      console.log(error);
-      response.send(error);
+  Player.find({}).sort({ name: 'asc' }).then(function (players) {
+    if (players) {
+      response.send(players);
+      response.end();
     }
-  }).then(function () {
+  }).then(null, function (error) {
+    response.send(error);
+    resonse.end();
+  });
+};
+
+function getPlayerById(request, response) {
+  Player.findById(request.params.id).then(function (player) {
+    if (player) {
+      response.send(player);
+      response.end();
+    }
+  }).then(null, function (error) {
+    response.send(error);
     response.end();
   });
 }
@@ -48,10 +59,38 @@ function createPlayer(request, response) {
   newPlayer.average.blocksPerGame = Number((newPlayer.totals.blocks / newPlayer.numberOfGamesPlayed).toFixed(1));
   newPlayer.save(function (error, player) {
     if (!error) {
-      console.log(player.name + ' was added to the database');
+      response.send(player.name + ' was added to the database');
     } else {
-      console.log(error);
+      response.send(error);
     }
     response.end();
   });
 };
+
+function updatePlayerStats(request, response) {
+  Player.findById(request.params.id).then(function (player) {
+    if (player) {
+      var keysArray = Object.keys(request.body);
+      for (var ii in keysArray) {
+        if (player[keysArray[ii]]) {
+          player[keysArray[ii]] = request.body[keysArray[ii]];
+        }
+      }
+      return player;
+    }
+  }).then(function (player) {
+    if (player) {
+      player.save(function (error, updatedplayer) {
+        if (!error) {
+          response.send(updatedplayer.name + ' stats were updated');
+        } else {
+          response.send(error);
+        }
+        response.end();
+      });
+    }
+  }).then(null, function (error) {
+    response.send(error);
+    response.end();
+  });
+}
