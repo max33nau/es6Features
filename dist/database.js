@@ -18,6 +18,13 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function database() {
+  function toUpper(value) {
+    return value.toUpperCase();
+  }
+  function validator(value) {
+    return !isNaN(value);
+  };
+  var check = [validator, 'You did not enter a number for that stat'];
   var db = undefined;
   var PlayerStatsSchema = undefined;
   var dbData = {
@@ -36,29 +43,29 @@ function database() {
     createSchema: function createSchema() {
       var Schema = _mongoose2.default.Schema;
       PlayerStatsSchema = new Schema({
-        name: { type: String, unique: true, required: true },
-        team: { type: String, required: true },
-        age: { type: Number, required: true },
+        name: { type: String, unique: true, required: true, set: toUpper },
+        team: { type: String, required: true, set: toUpper },
+        age: { type: Number, required: true, validate: check },
         height: {
-          feet: Number,
-          inches: Number
+          feet: { type: Number, validate: check },
+          inches: { type: Number, validate: check }
         },
-        position: { type: String, required: true },
+        position: { type: String, required: true, set: toUpper },
         rookie: Boolean,
-        numberOfGamesPlayed: Number,
+        numberOfGamesPlayed: { type: Number, required: true, validate: check },
         totals: {
-          points: Number,
-          rebounds: Number,
-          assists: Number,
-          steals: Number,
-          blocks: Number
+          points: { type: Number, validate: check },
+          rebounds: { type: Number, validate: check },
+          assists: { type: Number, validate: check },
+          steals: { type: Number, validate: check },
+          blocks: { type: Number, validate: check }
         },
         average: {
-          pointsPerGame: Number,
-          reboundsPerGame: Number,
-          assistsPerGame: Number,
-          stealsPerGame: Number,
-          blocksPerGame: Number
+          pointsPerGame: { type: Number, validate: check },
+          reboundsPerGame: { type: Number, validate: check },
+          assistsPerGame: { type: Number, validate: check },
+          stealsPerGame: { type: Number, validate: check },
+          blocksPerGame: { type: Number, validate: check }
         }
       });
       var player = _mongoose2.default.model('Player', PlayerStatsSchema);

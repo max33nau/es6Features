@@ -30,8 +30,8 @@ function stats() {
     var gamesPlayed = Number(request.body.numberOfGamesPlayed);
     newPlayer.name = request.body.name;
     newPlayer.team = request.body.team;
-    newPlayer.age = Number(request.body.age);
-    newPlayer.height.feet = Number(request.body.feet);
+    newPlayer.age = request.body.age;
+    newPlayer.height.feet = request.body.feet;
     newPlayer.height.inches = Number(request.body.inches);
     newPlayer.position = request.body.position;
     newPlayer.rookie = request.body.rookie;
