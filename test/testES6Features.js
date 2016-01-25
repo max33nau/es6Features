@@ -73,6 +73,24 @@ describe('single source API using es6 features', () => {
       .catch(done);
   });
 
+  it('should update only the parameters I set for it (update)', done => {
+    chaiRequest.patch(`/player/${id}`)
+      .send( { "name": "LITTLE PIGGY",
+              "position": "Power Forward",
+              "team": "Anti Wolf",
+              "age": 50 })
+      .then( response => {
+        expect(response).to.have.status(200);
+        return chaiRequest.get(`/player/${id}`);
+      })
+      .then( response => {
+        expect(response.body.name).to.deep.equal('LITTLE PIGGY');
+        expect(response.body.rookie).to.deep.equal(true);
+        done();
+      })
+      .catch(done);
+  });
+
   it('should update the whole object and anything that isnt updated is turned to null (update)', done => {
     chaiRequest.put(`/player/${id}`)
       .send( { "name": "Daphy Duck",
@@ -87,6 +105,7 @@ describe('single source API using es6 features', () => {
       })
       .catch(done);
   });
+
 
   it('should delete the previous person just added to the database (remove)', done => {
     chaiRequest.delete(`/player/${id}`)
