@@ -7,6 +7,7 @@ exports.getAll = getAll;
 exports.getPlayerById = getPlayerById;
 exports.createPlayer = createPlayer;
 exports.updatePlayerInfo = updatePlayerInfo;
+exports.removePlayer = removePlayer;
 
 var _database = require('./database');
 
@@ -29,12 +30,13 @@ function getPlayerById(request, response) {
   Player.findById(request.params.id).then(function (player) {
     if (player) {
       response.send(player);
-      response.end();
+    } else {
+      response.send('that id does not exist in the database');
     }
   }).then(null, function (error) {
     response.send(error);
-    response.end();
   });
+  response.end();
 }
 
 function createPlayer(request, response) {
@@ -74,6 +76,20 @@ function updatePlayerInfo(request, response) {
       response.end();
     } else {
       response.send('update data was a success');
+      response.end();
+    }
+  });
+}
+
+function removePlayer(request, response) {
+  Player.remove({ _id: request.params.id }).then(function (player, error) {
+    if (player) {
+      response.send(request.params.id + ' was removed');
+      response.end();
+    }
+  }).then(null, function (error) {
+    if (error) {
+      response.send(error);
       response.end();
     }
   });
