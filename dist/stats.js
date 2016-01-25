@@ -33,6 +33,7 @@ function stats() {
   router.get('/', playerHandler.getAll);
   router.get('/:id', playerHandler.getPlayerById);
   router.post('/', playerHandler.createPlayer);
-  router.put('/:id', playerHandler.updatePlayerStats);
+  router.patch('/:id', playerHandler.updateWholePlayerObject);
+  //router.patch('/:id', playerHandler.updatePlayerInfo)
   return router;
 }

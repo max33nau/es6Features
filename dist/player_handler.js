@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.getAll = getAll;
 exports.getPlayerById = getPlayerById;
 exports.createPlayer = createPlayer;
-exports.updatePlayerStats = updatePlayerStats;
+exports.updatePlayerInfo = updatePlayerInfo;
 
 var _database = require('./database');
 
@@ -67,30 +67,14 @@ function createPlayer(request, response) {
   });
 };
 
-function updatePlayerStats(request, response) {
-  Player.findById(request.params.id).then(function (player) {
-    if (player) {
-      var keysArray = Object.keys(request.body);
-      for (var ii in keysArray) {
-        if (player[keysArray[ii]]) {
-          player[keysArray[ii]] = request.body[keysArray[ii]];
-        }
-      }
-      return player;
+function updatePlayerInfo(request, response) {
+  Player.update({ _id: request.params.id }, { $set: request.body }, function (error) {
+    if (error) {
+      response.send(error);
+      response.end();
+    } else {
+      response.send('update data was a success');
+      response.end();
     }
-  }).then(function (player) {
-    if (player) {
-      player.save(function (error, updatedplayer) {
-        if (!error) {
-          response.send(updatedplayer.name + ' stats were updated');
-        } else {
-          response.send(error);
-        }
-        response.end();
-      });
-    }
-  }).then(null, function (error) {
-    response.send(error);
-    response.end();
   });
 }
