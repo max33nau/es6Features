@@ -34,4 +34,4 @@ gulp.task('build', () => {
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('test', ['run-tests', 'watch-test', 'lint']);
+gulp.task('test', ['run-tests', 'watch-test' ,'lint']);

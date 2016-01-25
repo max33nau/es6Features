@@ -23,8 +23,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// const dbData = database();
-// const Player = dbData.createSchema();
 var router = _express2.default.Router();
 
 function stats() {

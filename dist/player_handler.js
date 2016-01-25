@@ -61,7 +61,7 @@ function createPlayer(request, response) {
   newPlayer.average.blocksPerGame = Number((newPlayer.totals.blocks / newPlayer.numberOfGamesPlayed).toFixed(1));
   newPlayer.save(function (error, player) {
     if (!error) {
-      response.send(player.name + ' was added to the database');
+      response.send(player.name + ' was added to the database with a id of ' + player['_id']);
     } else {
       response.send(error);
     }
@@ -86,7 +86,7 @@ function updateWholeObject(request, response) {
     if (player) {
       player.save(function (error, player) {
         if (!error) {
-          response.send(player + ' entire object was saved');
+          response.send(player);
         } else {
           response.send(error);
         }
