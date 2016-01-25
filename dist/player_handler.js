@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.getAll = getAll;
 exports.getPlayerById = getPlayerById;
 exports.createPlayer = createPlayer;
+exports.updateWholeObject = updateWholeObject;
 exports.updatePlayerInfo = updatePlayerInfo;
 exports.removePlayer = removePlayer;
 
@@ -30,13 +31,12 @@ function getPlayerById(request, response) {
   Player.findById(request.params.id).then(function (player) {
     if (player) {
       response.send(player);
-    } else {
-      response.send('that id does not exist in the database');
+      response.end();
     }
   }).then(null, function (error) {
     response.send(error);
+    response.end();
   });
-  response.end();
 }
 
 function createPlayer(request, response) {
@@ -68,6 +68,38 @@ function createPlayer(request, response) {
     response.end();
   });
 };
+
+function updateWholeObject(request, response) {
+  Player.findById(request.params.id).then(function (player) {
+    if (player) {
+      var playerkeys = ['name', 'team', 'age', 'height', 'position', 'rookie', 'numberOfGamesPlayed', 'totals', 'average'];
+      for (var ii in playerkeys) {
+        if (request.body[playerkeys[ii]]) {
+          player[playerkeys[ii]] = request.body[playerkeys[ii]];
+        } else {
+          player[playerkeys[ii]] = null;
+        }
+      }
+      return player;
+    }
+  }).then(function (player) {
+    if (player) {
+      player.save(function (error, player) {
+        if (!error) {
+          response.send(player + ' entire object was saved');
+        } else {
+          response.send(error);
+        }
+        response.end();
+      });
+    }
+  }).then(null, function (error) {
+    if (error) {
+      response.send(error);
+      response.end();
+    }
+  });
+}
 
 function updatePlayerInfo(request, response) {
   Player.update({ _id: request.params.id }, { $set: request.body }, function (error) {
