@@ -43,3 +43,7 @@ function start(callback) {
     }
   };
 }
+
+start(function(){
+  console.log('everything has started');
+})
