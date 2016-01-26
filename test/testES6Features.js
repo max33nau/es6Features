@@ -1,5 +1,5 @@
 
-import 'assert';
+import assert from'assert';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 chai.use(chaiHttp);
@@ -106,7 +106,6 @@ describe('single source API using es6 features', () => {
       .catch(done);
   });
 
-
   it('should delete the previous person just added to the database (remove)', done => {
     chaiRequest.delete(`/player/${id}`)
       .then(response => {
@@ -122,4 +121,17 @@ describe('single source API using es6 features', () => {
     server.close(done);
   });
 
+});
+
+import {myPushAndmyPop} from '../lib/extraES6features';
+
+describe('basic tests of classes and inheritance', () => {
+  it('should add the specify value to the array and then pop it off', () => {
+    let testArray = [1,2,3,4,5];
+    let test = new myPushAndmyPop(testArray);
+    test.myPush('foo')
+    assert.deepEqual(test.array, [1, 2, 3,4,5, 'foo']);
+    test.myPop()
+    assert.deepEqual(test.array, [1, 2, 3,4,5]);
+  });
 });
